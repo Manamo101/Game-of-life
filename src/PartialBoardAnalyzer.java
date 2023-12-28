@@ -1,25 +1,49 @@
+import java.util.concurrent.CountDownLatch;
+
 public class PartialBoardAnalyzer extends Thread {
-    int threadID;
-    boolean[][] currentBoard;
-    boolean[][] nextBoard;
-    int[] rowsRange;
-    PartialBoardAnalyzer(int threadID, boolean[][] currentBoard, boolean[][] nextBoard, int[] rowsRange) {
+    private final int threadID;
+    private final boolean[][] currentBoard;
+    private final boolean[][] nextBoard;
+    private final int[] rowsRange;
+    private final CountDownLatch readyThreadCounter;
+    private final CountDownLatch callingThreadBlocker;
+    private final CountDownLatch completedThreadCounter;
+    PartialBoardAnalyzer(int threadID, boolean[][] currentBoard, boolean[][] nextBoard, int[] rowsRange,
+                        CountDownLatch readyThreadCounter, CountDownLatch callingThreadBlocker, CountDownLatch completedThreadCounter) {
         this.threadID = threadID;
         this.currentBoard = currentBoard;
         this.nextBoard = nextBoard;
         this.rowsRange = rowsRange;
+        this.readyThreadCounter = readyThreadCounter;
+        this.callingThreadBlocker = callingThreadBlocker;
+        this.completedThreadCounter = completedThreadCounter;
     }
 
     public void run() {
-        for (int i = rowsRange[0]; i <= rowsRange[1]; i++) {
+        readyThreadCounter.countDown();
+        try {
+            callingThreadBlocker.await();
+            doYourJob();
+            printThreadDetails();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        finally {
+            completedThreadCounter.countDown();
+        }
+    }
+
+    private void doYourJob(){
+        for (int i = rowsRange[0]; i < rowsRange[1]; i++) {
             for (int j = 0; j < currentBoard[0].length; j++) {
 
                 int alive = 0;
                 for (int k = -1; k <= 1; k++) {
                     for (int l = -1; l <= 1; l++) {
-                        if (k != 0 && l != 0) {
+                        if (!(k == 0 && l == 0)) {
 
-                            if (getElement(k,l)){
+                            if (getElement(i + l,j + k)){
                                 alive++;
                             }
 
@@ -32,17 +56,17 @@ public class PartialBoardAnalyzer extends Thread {
                 else {
                     nextBoard[i][j] = alive == 3;
                 }
-                System.out.printf("ThreadID %2d: rows: %2d:%2d (%2d) cols: 0-%-2d (%2d)"
-                        ,threadID, rowsRange[0], rowsRange[1], rowsRange[1]-rowsRange[0]+1, currentBoard[0].length-1, currentBoard[0].length);
 
             }
         }
     }
 
-    public boolean getElement(int i, int j){
+    private void printThreadDetails(){
+        System.out.printf("ThreadID %2d: rows: %2d:%-2d (%d) cols: 0-%d (%d)\n"
+                ,threadID, rowsRange[0], rowsRange[1]-1, rowsRange[1]-rowsRange[0], currentBoard[0].length-1, currentBoard[0].length);
+    }
+    boolean getElement(int i, int j){
         // Torus Model
-//        return new int[]{ i != -1 ? i%totalRows : i+totalRows, j != -1 ? j%columns : j+columns};
-//        return new int[]{(i+ TOTAL_ROWS) % TOTAL_ROWS, (j+ TOTAL_COLUMNS) % TOTAL_COLUMNS};
         int rows = currentBoard.length;
         int columns = currentBoard[0].length;
         return currentBoard[(i+ rows) % rows][(j+ columns) % columns];
