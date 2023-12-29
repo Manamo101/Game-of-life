@@ -13,6 +13,7 @@ public class WorkManager {
         CountDownLatch readyThreadCounter = new CountDownLatch(threads);
         CountDownLatch callingThreadBlocker = new CountDownLatch(1);
         CountDownLatch completedThreadCounter = new CountDownLatch(threads);
+
         for (int i = 1; i <= threads; i++) {
             //first included, second excluded
             int[] rowsRange = new int[2];
@@ -34,8 +35,8 @@ public class WorkManager {
                 previousGivenIndexes += rows/threads;
             }
         }
-        try {
 
+        try {
             readyThreadCounter.await();
             callingThreadBlocker.countDown();
             completedThreadCounter.await();

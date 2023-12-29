@@ -11,24 +11,6 @@ public class Main {
             System.exit(1);
         }
         boolean[][] newBoard = new boolean[board.length][board[0].length];
-//        boolean[][] board = {{false, false, false, false, false, false}, //beehive (still)
-//                             {false, false, true, true, false, false},
-//                             {false, true, false, false, true, false},
-//                             {false, false, true, true, false, false},
-//                             {false, false, false, false, false, false}};
-//        boolean[][] board = {{false, false, false, false, false, false}, //block (still)
-//                {false, false, false, false, false, false},
-//                {false, false, true, true, false, false},
-//                {false, false, true, true, false, false},
-//                {false, false, false, false, false, false}};
-//        boolean[][] board = {{false, false, false, false, false, false}, //blinker (oscillator)
-//                {false, false, true, false, false, false},
-//                {false, false, true, false, false, false},
-//                {false, false, true, false, false, false},
-//                {false, false, false, false, false, false}};
-
-
-
 
         printBoard(board);
         for (int it = 0; it < iterations; it++){
@@ -38,7 +20,7 @@ public class Main {
             board = newBoard;
             newBoard = new boolean[board.length][board[0].length];
             try{
-                Thread.sleep(300);
+                Thread.sleep(700);
             }
             catch (InterruptedException e){
                 e.getMessage();
