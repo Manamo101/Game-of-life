@@ -1,15 +1,12 @@
 import java.util.concurrent.CountDownLatch;
 
 public class WorkManager {
-//    boolean[][] currentBoard;
-//    boolean[][] nextBoard;
     private final int threads;
     WorkManager(int threads) {
         this.threads = threads;
     }
     public void startIteration(boolean[][] currentBoard, boolean[][] nextBoard) {
         int rows = currentBoard.length;
-        int columns = currentBoard[0].length;
         int mod = rows % threads;
         int previousGivenIndexes = 0;
 
@@ -45,14 +42,6 @@ public class WorkManager {
         }
         catch (InterruptedException e){
             e.getMessage();
-        }
-    }
-    public static void printBoard(boolean[][] board){
-        for (boolean[] row : board){
-            for (boolean cell : row){
-                System.out.print(cell ? "X " : "- ");
-            }
-            System.out.println();
         }
     }
 }
