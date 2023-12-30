@@ -1,8 +1,8 @@
 import java.util.concurrent.CountDownLatch;
 
-public class WorkManager {
+public class RowsSplitter {
     private final int threads;
-    WorkManager(int threads) {
+    RowsSplitter(int threads) {
         this.threads = threads;
     }
     public void startIteration(boolean[][] currentBoard, boolean[][] nextBoard) {

@@ -1,22 +1,34 @@
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 
 public class Main {
     public static void main(String[] args) {
-        File file = new File(args[1]);
-        int threads = FileParser.parseInt(args[0]);
+        String[] input = Game.getArguments();
+        File file = new File(input[1]);
+        int threads = FileParser.parseInt(input[0]);
         int iterations = FileParser.getNumberOfIterations(file);
         boolean [][] board = FileParser.getArray(file);
-        if (threads < 0 || iterations < 1 || board == null){
-            System.out.println("inadequacy detected");
-            System.exit(1);
+        if (iterations < 1){
+            Game.iterationError();
         }
         boolean[][] newBoard = new boolean[board.length][board[0].length];
 
-        printBoard(board);
-        for (int it = 0; it < iterations; it++){
-            WorkManager workManager = new WorkManager(threads);
+        CountDownLatch startGameLatch = new CountDownLatch(1);
+        Game frame = new Game(startGameLatch, board);
+        frame.printBoard(board, 0);
+        // waits until the start button be pressed
+        try {
+            startGameLatch.await();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        for (int it = 1; it <= iterations; it++){
+            System.out.println();
+            System.out.println("iteration: " + it);
+            RowsSplitter workManager = new RowsSplitter(threads);
             workManager.startIteration(board, newBoard);
-            printBoard(newBoard);
+            frame.printBoard(newBoard, it);
             board = newBoard;
             newBoard = new boolean[board.length][board[0].length];
             try{
@@ -25,14 +37,6 @@ public class Main {
             catch (InterruptedException e){
                 e.getMessage();
             }
-        }
-    }
-    public static void printBoard(boolean[][] board){
-        for (boolean[] row : board){
-            for (boolean cell : row){
-                System.out.print(cell ? "X " : "- ");
-            }
-            System.out.println();
         }
     }
 }
