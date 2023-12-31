@@ -3,18 +3,16 @@ import java.util.concurrent.CountDownLatch;
 
 public class Main {
     public static void main(String[] args) {
-        String[] input = Game.getArguments();
+        String[] input = GameFrame.getArguments();
         File file = new File(input[1]);
         int threads = FileParser.parseInt(input[0]);
         int iterations = FileParser.getNumberOfIterations(file);
         boolean [][] board = FileParser.getArray(file);
-        if (iterations < 1){
-            Game.iterationError();
-        }
+        GameFrame.iterationError(iterations);
         boolean[][] newBoard = new boolean[board.length][board[0].length];
 
         CountDownLatch startGameLatch = new CountDownLatch(1);
-        Game frame = new Game(startGameLatch, board);
+        GameFrame frame = new GameFrame(startGameLatch, board);
         frame.printBoard(board, 0);
         // waits until the start button be pressed
         try {

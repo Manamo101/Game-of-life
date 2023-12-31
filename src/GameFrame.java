@@ -4,11 +4,11 @@ import java.awt.*;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
-public class Game extends JFrame{
+public class GameFrame extends JFrame{
     private final JPanel boardPanel;
     JLabel iterations;
     private CountDownLatch startGameLatch;
-    public Game(CountDownLatch startGameLatch, boolean[][] board){
+    public GameFrame(CountDownLatch startGameLatch, boolean[][] board){
         this.startGameLatch = startGameLatch;
         boardPanel = new JPanel(new GridLayout(board.length,board[0].length));
         this.add(boardPanel, BorderLayout.CENTER);
@@ -64,8 +64,9 @@ public class Game extends JFrame{
         for (boolean[] row : board){
             for (boolean cell : row){
                 JPanel tile = new JPanel();
+                tile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
                 if (cell){
-                    tile.setBackground(Color.black);
+                    tile.setBackground(Color.DARK_GRAY);
                 }
                 else {
                     tile.setBackground(Color.white);
@@ -112,8 +113,10 @@ public class Game extends JFrame{
             return null;
         }
     }
-    public static void iterationError(){
-        JOptionPane.showMessageDialog(null, "Number of iterations cannot be lesser than 1", "ERROR" , JOptionPane.ERROR_MESSAGE);
-        System.exit(1);
+    public static void iterationError(int i){
+        if (i < 1){
+            JOptionPane.showMessageDialog(null, "Number of iterations cannot be lesser than 1", "ERROR" , JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
     }
 }
