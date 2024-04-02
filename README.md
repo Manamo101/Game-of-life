@@ -26,6 +26,7 @@ Where:
 
 Remember: indexes start from 0 and first cell, i.e. 0:0, is on the top left corner.
 
-Arguments are typed while invoking program in undermentioned order:
+### Graphical version
+Arguments need to be given in initial conguration windows in undermentioned order:
 1. number of threads, which have to be used by the program
-2. path to the text file with initial distribution
+2. right file with initial distribution
