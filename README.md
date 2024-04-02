@@ -1,5 +1,4 @@
 # Conway's Game of life (Conway 23/3)
-### CLI version
 
 Map is toroidal.
 
@@ -27,6 +26,7 @@ Where:
 
 Remember: indexes start from 0 and first cell, i.e. 0:0, is on the top left corner.
 
+### This is a CLI version
 Arguments are typed while invoking program in undermentioned order:
 1. number of threads, which have to be used by the program
 2. path to the text file with initial distribution
