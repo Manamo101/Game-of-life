@@ -1,4 +1,5 @@
 # Conway's Game of life (Conway 23/3)
+### CLI version
 
 Map is toroidal.
 
